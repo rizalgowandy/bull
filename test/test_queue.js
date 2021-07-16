@@ -310,6 +310,11 @@ describe('Queue', () => {
           expect(job.id).to.be.ok;
           expect(job.data.foo).to.be.eql('bar');
         })
+        .then(
+          queueFoo.bclient.client('GETNAME').then(name => {
+            expect(name).to.be.eql(queueFoo.clientName());
+          })
+        )
         .then(() => {
           return queueQux.add({ qux: 'baz' }).then(job => {
             expect(job.id).to.be.ok;
@@ -1480,6 +1485,39 @@ describe('Queue', () => {
         .catch(done);
     });
 
+    it('should clear job from stalled set when job completed', done => {
+      const queue2 = utils.buildQueue('running-job-' + uuid.v4(), {
+        settings: {
+          stalledInterval: 10
+        }
+      });
+
+      queue2.process(job => {
+        expect(job.data.foo).to.be.equal('bar');
+        return delay(100);
+      });
+
+      queue2.add({ foo: 'bar' }).then(
+        job => {
+          expect(job.id).to.be.ok;
+          expect(job.data.foo).to.be.eql('bar');
+        },
+        err => {
+          done(err);
+        }
+      );
+
+      queue2.once('completed', async () => {
+        const stalled = await queue2.getStalledCount();
+        try {
+          expect(stalled).to.be.equal(0);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+    });
+
     it('process a job that fails', done => {
       const jobError = new Error('Job Failed');
 
@@ -2229,6 +2267,48 @@ describe('Queue', () => {
             attempts: 3,
             backoff: {
               type: 'custom'
+            }
+          }
+        );
+      });
+      queue.on('completed', () => {
+        const elapse = Date.now() - start;
+        expect(elapse).to.be.greaterThan(3000);
+        done();
+      });
+    });
+
+    it('should pass strategy options to custom backoff', function(done) {
+      this.timeout(12000);
+      queue = utils.buildQueue('test retries and backoffs', {
+        settings: {
+          backoffStrategies: {
+            custom(attemptsMade, err, strategyOptions) {
+              expect(strategyOptions.id).to.be.equal('FOO42');
+              return attemptsMade * 1000;
+            }
+          }
+        }
+      });
+      let start;
+      queue.isReady().then(() => {
+        queue.process((job, jobDone) => {
+          if (job.attemptsMade < 2) {
+            throw new Error('Not yet!');
+          }
+          jobDone();
+        });
+
+        start = Date.now();
+        queue.add(
+          { foo: 'bar' },
+          {
+            attempts: 3,
+            backoff: {
+              type: 'custom',
+              options: {
+                id: 'FOO42'
+              }
             }
           }
         );

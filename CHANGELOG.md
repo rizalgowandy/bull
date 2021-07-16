@@ -1,3 +1,73 @@
+# [3.26.0](https://github.com/OptimalBits/bull/compare/v3.25.2...v3.26.0) (2021-07-16)
+
+
+### Features
+
+* **repeatable:** store key in repeat options ([dab0d82](https://github.com/OptimalBits/bull/commit/dab0d8266174f1d25ec914cff8450594d85db511))
+
+## [3.25.2](https://github.com/OptimalBits/bull/compare/v3.25.1...v3.25.2) (2021-07-16)
+
+
+### Bug Fixes
+
+* **repeatable:** honor endDate fixes [#1573](https://github.com/OptimalBits/bull/issues/1573) ([7f0db0e](https://github.com/OptimalBits/bull/commit/7f0db0e293367752971be8a1bf7b6c8cf4190350))
+
+## [3.25.1](https://github.com/OptimalBits/bull/compare/v3.25.0...v3.25.1) (2021-07-16)
+
+
+### Bug Fixes
+
+* error when .lua scripts missing in built bundle ([85307c3](https://github.com/OptimalBits/bull/commit/85307c3a8e48b910590b2682700c5062c84d32b0))
+
+# [3.25.0](https://github.com/OptimalBits/bull/compare/v3.24.0...v3.25.0) (2021-07-15)
+
+
+### Features
+
+* pass clientName to createClient function ([2a29569](https://github.com/OptimalBits/bull/commit/2a295691b88318ff64beaa7b83e03487854a7fe4))
+
+# [3.24.0](https://github.com/OptimalBits/bull/compare/v3.23.3...v3.24.0) (2021-07-15)
+
+
+### Features
+
+* **backoff:** add option to specify options for custom backoff strategy ([e573010](https://github.com/OptimalBits/bull/commit/e5730107688a41c7268a717f16302c5959eaf6f6))
+
+## [3.23.3](https://github.com/OptimalBits/bull/compare/v3.23.2...v3.23.3) (2021-07-15)
+
+
+### Bug Fixes
+
+* **delayed:** do not get lock twice fixes [#2033](https://github.com/OptimalBits/bull/issues/2033) ([2800cf8](https://github.com/OptimalBits/bull/commit/2800cf8923ccac52dcd4da4e7fd19b3404c68fe8))
+
+## [3.23.2](https://github.com/OptimalBits/bull/compare/v3.23.1...v3.23.2) (2021-07-15)
+
+
+### Bug Fixes
+
+* **job:** add default err object fixes [#2029](https://github.com/OptimalBits/bull/issues/2029) ([39684e9](https://github.com/OptimalBits/bull/commit/39684e9f941e2ea4191809fdc2aa52b3d7b267ae))
+
+## [3.23.1](https://github.com/OptimalBits/bull/compare/v3.23.0...v3.23.1) (2021-07-15)
+
+
+### Bug Fixes
+
+* wait in queue to be ready in getNextJob fixes [#1852](https://github.com/OptimalBits/bull/issues/1852) ([4e224e5](https://github.com/OptimalBits/bull/commit/4e224e5533f729b9781b1db81e1875b1bd50afb0))
+
+# [3.23.0](https://github.com/OptimalBits/bull/compare/v3.22.12...v3.23.0) (2021-07-13)
+
+
+### Features
+
+* support job.update function in sandboxed processors ([ff79fb4](https://github.com/OptimalBits/bull/commit/ff79fb494ea3e123256b35d18b46b24fbb9b8365)), closes [#1279](https://github.com/OptimalBits/bull/issues/1279) [#1608](https://github.com/OptimalBits/bull/issues/1608) [#1056](https://github.com/OptimalBits/bull/issues/1056)
+
+## [3.22.12](https://github.com/OptimalBits/bull/compare/v3.22.11...v3.22.12) (2021-07-13)
+
+
+### Bug Fixes
+
+* remove stalled job when finishing fixes [#1600](https://github.com/OptimalBits/bull/issues/1600) ([90763fd](https://github.com/OptimalBits/bull/commit/90763fd66404d8bc5a47ff8555cbe2da776c030d))
+
 ## [3.22.11](https://github.com/OptimalBits/bull/compare/v3.22.10...v3.22.11) (2021-07-08)
 
 

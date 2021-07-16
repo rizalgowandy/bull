@@ -3,9 +3,7 @@ tmp
 test
 bugs
 docs
-examples
 support
-typings
 .github
 .editorconfig
 .eslintrc.yml

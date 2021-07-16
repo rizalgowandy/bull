@@ -75,7 +75,8 @@ describe('repeat', () => {
     expect(job1.opts.repeat).to.be.deep.equal({
       count: 1,
       cron: '0 * * * * *',
-      startDate: '2020-09-02T22:29:00Z'
+      startDate: '2020-09-02T22:29:00Z',
+      key: '__default__::::0 * * * * *'
     });
 
     const job2 = await queue.add(
@@ -96,7 +97,8 @@ describe('repeat', () => {
       count: 1,
       cron: '0 * * * * *',
       startDate: '2020-09-02T22:29:00Z',
-      endDate: '2020-09-05T01:44:37Z'
+      endDate: '2020-09-05T01:44:37Z',
+      key: '__default__::1599270277000::0 * * * * *'
     });
   });
 
@@ -474,6 +476,14 @@ describe('repeat', () => {
     expect(delayedJobs).to.have.length(0);
   });
 
+  it('should return repeatable job key', async () => {
+    const repeat = { cron: '*/2 * * * * *' };
+
+    const job = await queue.add('remove', { foo: 'bar' }, { repeat });
+
+    expect(job.opts.repeat.key).to.be.equal('remove::::*/2 * * * * *');
+  });
+
   it('should be able to remove repeatable jobs by key that has a jobId', async () => {
     const repeat = { cron: '*/2 * * * * *' };
 
@@ -695,7 +705,6 @@ describe('repeat', () => {
     }, done);
   });
 
-  // Skip test that only fails on travis
   it('should use ".every" as a valid interval', function(done) {
     const _this = this;
     const interval = ONE_SECOND * 2;
@@ -801,5 +810,36 @@ describe('repeat', () => {
         done(Error('repeatable job got the wrong repeat count'));
       }
     });
+  });
+
+  it('it should stop repeating after endDate', async function() {
+    const every = 100;
+    const date = new Date('2017-02-07 9:24:00');
+    this.clock.setSystemTime(date);
+
+    await queue.add(
+      { id: 'my id' },
+      {
+        repeat: {
+          endDate: Date.now() + 1000,
+          every: 100
+        }
+      }
+    );
+
+    this.clock.tick(every + 1);
+
+    let processed = 0;
+    queue.process(async () => {
+      this.clock.tick(every);
+      processed++;
+    });
+
+    await utils.sleep(1100);
+
+    const delayed = await queue.getDelayed();
+
+    expect(delayed).to.have.length(0);
+    expect(processed).to.be.equal(10);
   });
 });
